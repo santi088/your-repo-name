@@ -18,6 +18,7 @@ public class PdfViewerHandler : ViewHandler<PdfViewer, RecyclerView>
         {
             [nameof(PdfViewer.PagePaths)] = MapPagePaths,
             [nameof(PdfViewer.SourcePath)] = MapSourcePath,
+            [nameof(PdfViewer.RenderWidth)] = MapRenderWidth,
             [nameof(PdfViewer.CurrentPageIndex)] = MapCurrentPageIndex,
         };
 
@@ -51,6 +52,7 @@ public class PdfViewerHandler : ViewHandler<PdfViewer, RecyclerView>
 
         _adapter = new PdfPageAdapter(context, ResolvePdfRenderer());
         _adapter.SetSource(VirtualView?.SourcePath);
+        _adapter.SetRenderWidth(VirtualView?.RenderWidth ?? 0);
         recyclerView.SetAdapter(_adapter);
 
         _scrollListener = new PdfScrollListener(this);
@@ -115,6 +117,15 @@ public class PdfViewerHandler : ViewHandler<PdfViewer, RecyclerView>
         handler._adapter?.SetSource(virtualView.SourcePath);
     }
 
+    /// <summary>
+    /// The rasterisation width is decided by the view model, which stamps the same
+    /// value onto the page files, so the adapter only ever follows it.
+    /// </summary>
+    public static void MapRenderWidth(PdfViewerHandler handler, PdfViewer virtualView)
+    {
+        handler._adapter?.SetRenderWidth(virtualView.RenderWidth);
+    }
+
     public static void MapCurrentPageIndex(PdfViewerHandler handler, PdfViewer virtualView)
     {
         // Property binding sync; programmatic scrolling goes through ScrollToPage so
@@ -163,9 +174,6 @@ internal class PdfPageAdapter : RecyclerView.Adapter
     /// <summary>Rasterising is expensive; two at a time keeps the UI responsive.</summary>
     private const int MaxConcurrentRenders = 2;
 
-    private const int MinRenderWidth = 720;
-    private const int MaxRenderWidth = 1200;
-
     private readonly Context _context;
     private readonly PageBitmapCache _bitmaps = new(BitmapCacheBytes);
     private readonly SemaphoreSlim _renderGate = new(MaxConcurrentRenders);
@@ -177,6 +185,7 @@ internal class PdfPageAdapter : RecyclerView.Adapter
     private int _itemWidth;
     private int _itemHeight;
     private int _renderWidth;
+    private int _requestedRenderWidth;
     private bool _disposed;
 
     public PdfPageAdapter(Context context, IPdfRendererService? renderer)
@@ -189,6 +198,21 @@ internal class PdfPageAdapter : RecyclerView.Adapter
     public void SetSource(string? sourcePath)
     {
         _sourcePath = sourcePath;
+    }
+
+    /// <summary>
+    /// Width the owner wants pages rasterised at, so the JPEG written to disk is the
+    /// resolution the viewer decodes. <c>0</c> leaves the choice to the screen size.
+    /// </summary>
+    public void SetRenderWidth(int renderWidth)
+    {
+        if (renderWidth == _requestedRenderWidth)
+        {
+            return;
+        }
+
+        _requestedRenderWidth = renderWidth;
+        CalculateItemDimensions();
     }
 
     public void SetPages(IReadOnlyList<string>? pages)
@@ -205,9 +229,19 @@ internal class PdfPageAdapter : RecyclerView.Adapter
     {
         var metrics = _context.Resources?.DisplayMetrics;
         int screenWidth = metrics?.WidthPixels ?? 1080;
+        int screenHeight = metrics?.HeightPixels ?? 1920;
         _itemWidth = screenWidth;
         _itemHeight = (int)(_itemWidth * 1.414);
-        _renderWidth = Math.Clamp(screenWidth, MinRenderWidth, MaxRenderWidth);
+
+        // Pages are rasterised at the resolution they will be shown at: the old fixed
+        // 1200px ceiling meant a wider screen upscaled every page. PdfPageFiles owns the
+        // policy (and the reader stamps the same number onto the page files); the owner's
+        // value wins so the file on disk and the decode below can never drift apart. The
+        // fallback uses the shorter side, which is what the reader passes, so rotation
+        // does not change the answer.
+        _renderWidth = _requestedRenderWidth > 0
+            ? _requestedRenderWidth
+            : PdfPageFiles.ComputeRenderWidth(Math.Min(screenWidth, screenHeight));
     }
 
     public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
@@ -342,6 +376,14 @@ internal class PdfPageAdapter : RecyclerView.Adapter
 
     private void AttachBitmap(PdfPageViewHolder holder, Bitmap bitmap)
     {
+        // One reference per holder. A holder can be handed a different bitmap without an
+        // intervening ResetHolder (rebind while a decode is in flight), and a reference
+        // left behind would pin the old bitmap for as long as the cache lives.
+        if (holder.BoundBitmap is { } previous && !ReferenceEquals(previous, bitmap))
+        {
+            _bitmaps.Release(previous);
+        }
+
         _bitmaps.AddRef(bitmap);
         holder.BoundBitmap = bitmap;
         holder.ImageView.SetImageBitmap(bitmap);
@@ -721,9 +763,13 @@ internal sealed class PageBitmapCache
 
     private void Trim()
     {
+        // Never evict the most recently used entry: that is the bitmap the caller is
+        // about to attach, and recycling it before it reaches a view would leave the
+        // page stuck on its placeholder (Store returns null for an evicted bitmap).
+        // One entry may therefore sit above the byte budget, which is harmless.
         var node = _lru.Last;
 
-        while (_bytes > _maxBytes && node is not null)
+        while (_bytes > _maxBytes && node is not null && node != _lru.First)
         {
             // Grab the neighbour first: removing a node clears its links.
             var previous = node.Previous;

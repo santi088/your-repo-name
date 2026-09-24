@@ -28,6 +28,18 @@ public class PdfViewer : View
             0,
             BindingMode.TwoWay);
 
+    /// <summary>
+    /// Width in pixels pages should be rasterised at, decided by the view model so the
+    /// width stamped onto the page files and the width the native viewer requests can
+    /// never disagree. <c>0</c> lets the platform handler choose.
+    /// </summary>
+    public static readonly BindableProperty RenderWidthProperty =
+        BindableProperty.Create(
+            nameof(RenderWidth),
+            typeof(int),
+            typeof(PdfViewer),
+            0);
+
     public IReadOnlyList<string>? PagePaths
     {
         get => (IReadOnlyList<string>?)GetValue(PagePathsProperty);
@@ -44,6 +56,12 @@ public class PdfViewer : View
     {
         get => (int)GetValue(CurrentPageIndexProperty);
         set => SetValue(CurrentPageIndexProperty, value);
+    }
+
+    public int RenderWidth
+    {
+        get => (int)GetValue(RenderWidthProperty);
+        set => SetValue(RenderWidthProperty, value);
     }
 
     public event EventHandler<PdfPageScrolledEventArgs>? PageScrolled;

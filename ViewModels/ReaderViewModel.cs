@@ -58,6 +58,13 @@ public partial class ReaderViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private string? pdfSourcePath;
 
+    /// <summary>
+    /// Width in pixels pages are rasterised at, from <see cref="PdfPageFiles.ComputeRenderWidth"/>.
+    /// The native viewer renders at exactly this width.
+    /// </summary>
+    [ObservableProperty]
+    private int renderWidth;
+
     [ObservableProperty]
     private int currentPdfPage;
 
@@ -95,7 +102,17 @@ public partial class ReaderViewModel : ObservableObject, IDisposable
                 Header = Book.Title;
 
                 var pagesDirectory = EnsurePdfPagesDirectory(Book);
+
+                // Decide the page resolution before anything is rendered: it is handed to
+                // the native viewer, so the JPEG on disk and the bitmap on screen are
+                // never at different resolutions.
+                RenderWidth = PdfPageFiles.ComputeRenderWidth(GetShorterDisplaySidePixels());
+
+                // Count first, then drop pages left by another width: the count falls back
+                // to the pages already on disk when the document cannot be opened, and
+                // that fallback is only worth having while those pages are still there.
                 var pageCount = await ResolvePdfPageCountAsync(Book.FilePath, pagesDirectory);
+                await PreparePageDirectoryAsync(pagesDirectory, RenderWidth);
 
                 // Tracked so the folder is cleaned up even if the document cannot be opened.
                 Book.RenderedPagesDir = pagesDirectory;
@@ -171,6 +188,47 @@ public partial class ReaderViewModel : ObservableObject, IDisposable
 
         Directory.CreateDirectory(directory);
         return directory;
+    }
+
+    /// <summary>
+    /// Brings a page directory in line with the current screen: pages rasterised at
+    /// another width are dropped, and page files a killed process left half written are
+    /// removed. Off the UI thread, because it can delete every page of a long document.
+    /// </summary>
+    private static async Task PreparePageDirectoryAsync(string pagesDirectory, int renderWidth)
+    {
+        try
+        {
+            await Task.Run(() =>
+            {
+                PdfPageFiles.EnsureRenderWidth(pagesDirectory, renderWidth);
+                PdfPageFiles.CleanStaleTempFiles(pagesDirectory);
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(
+                $"READER: preparing page directory failed: {ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Shorter side of the display in physical pixels, or 0 when the platform will not
+    /// say. The shorter side is used on purpose: the display width swaps on rotation,
+    /// and keying the page resolution off it would make opening the reader in landscape
+    /// discard and re-rasterise every page at a new width.
+    /// </summary>
+    private static int GetShorterDisplaySidePixels()
+    {
+        try
+        {
+            var display = DeviceDisplay.MainDisplayInfo;
+            return (int)Math.Round(Math.Min(display.Width, display.Height));
+        }
+        catch
+        {
+            return 0;
+        }
     }
 
     /// <summary>

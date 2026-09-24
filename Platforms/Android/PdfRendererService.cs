@@ -131,7 +131,7 @@ public class PdfRendererService : IPdfRendererService
 
                     // Encode to a temp file and move it into place so a scrolling
                     // reader can never pick up a half written JPEG.
-                    tempPath = outputPath + ".tmp";
+                    tempPath = outputPath + PdfPageFiles.TempSuffix;
 
                     using (var stream = File.Create(tempPath))
                     {

@@ -84,6 +84,7 @@
                 BackgroundColor="#1A1A1A"
                 SourcePath="{Binding PdfSourcePath}"
                 PagePaths="{Binding PdfPagePaths}"
+                RenderWidth="{Binding RenderWidth}"
                 CurrentPageIndex="{Binding CurrentPdfPage}"
                 PageScrolled="OnPdfPageScrolled"
                 VerticalOptions="Fill"
