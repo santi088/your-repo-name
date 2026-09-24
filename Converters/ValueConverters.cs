@@ -46,15 +46,17 @@ public class InverseBoolConverter : IValueConverter
 
 public class StatusColorConverter : IValueConverter
 {
+    // Mirrors the Status* colours in Resources/Styles/Colors.xaml, darkened so the
+    // text stays legible on the SurfaceAlt chip background.
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var label = value?.ToString() ?? "";
         return label switch
         {
-            "Currently Reading" => Color.FromArgb("#4A6B58"),
-            "Completed" => Color.FromArgb("#6B3E2E"),
-            "Dropped" => Color.FromArgb("#8A5A44"),
-            _ => Color.FromArgb("#C4A35A")
+            "Currently Reading" => Color.FromArgb("#8A6A38"),
+            "Completed" => Color.FromArgb("#4E6A56"),
+            "Dropped" => Color.FromArgb("#8A5449"),
+            _ => Color.FromArgb("#5E7A8C")
         };
     }
 

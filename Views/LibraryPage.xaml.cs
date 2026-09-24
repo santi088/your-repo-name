@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using PAGELY.ViewModels;
-using System;
 
 namespace PAGELY.Views;
 
@@ -8,30 +7,19 @@ public partial class LibraryPage : ContentPage
 {
     private readonly LibraryViewModel _viewModel;
 
-    // Use a clean parameterless constructor wrapper to map compiled source generation graphs
-    public LibraryPage()
+    public LibraryPage() : this(MauiProgram.Services.GetRequiredService<LibraryViewModel>())
+    {
+    }
+
+    public LibraryPage(LibraryViewModel viewModel)
     {
         InitializeComponent();
-        
-        _viewModel = MauiProgram.Services.GetRequiredService<LibraryViewModel>();
-        BindingContext = _viewModel;
+        BindingContext = _viewModel = viewModel;
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        if (_viewModel != null && _viewModel.LoadCommand != null)
-        {
-            await _viewModel.LoadCommand.ExecuteAsync(null);
-        }
-    }
-
-    private void OnStatusClicked(object? sender, EventArgs e)
-    {
-        if (sender is Button button && _viewModel != null)
-        {
-            _viewModel.SelectedStatus = button.Text;
-        }
+        await _viewModel.LoadCommand.ExecuteAsync(null);
     }
 }
-

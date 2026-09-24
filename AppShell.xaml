@@ -18,16 +18,28 @@
 
     <TabBar x:Name="MainTabBar">
         <Tab Title="Library">
-            <ShellContent ContentTemplate="{DataTemplate views:LibraryPage}" Route="library" />
+            <ShellContent
+                ContentTemplate="{DataTemplate views:LibraryPage}"
+                Route="library"
+                Shell.NavBarIsVisible="False" />
         </Tab>
         <Tab Title="Search">
-            <ShellContent ContentTemplate="{DataTemplate views:SearchPage}" Route="search" />
+            <ShellContent
+                ContentTemplate="{DataTemplate views:SearchPage}"
+                Route="search"
+                Shell.NavBarIsVisible="False" />
         </Tab>
         <Tab Title="History">
-            <ShellContent ContentTemplate="{DataTemplate views:HistoryPage}" Route="history" />
+            <ShellContent
+                ContentTemplate="{DataTemplate views:HistoryPage}"
+                Route="history"
+                Shell.NavBarIsVisible="False" />
         </Tab>
         <Tab Title="Stats">
-            <ShellContent ContentTemplate="{DataTemplate views:StatsPage}" Route="stats" />
+            <ShellContent
+                ContentTemplate="{DataTemplate views:StatsPage}"
+                Route="stats"
+                Shell.NavBarIsVisible="False" />
         </Tab>
     </TabBar>
 

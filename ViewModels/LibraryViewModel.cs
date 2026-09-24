@@ -17,29 +17,15 @@ public partial class LibraryViewModel : ObservableObject
     {
         _database = database;
         _import = import;
-        StatusFilters = new ObservableCollection<string>(ReadingStatusDisplay.FilterOptions);
-        SelectedStatus = "All";
     }
 
     public ObservableCollection<Book> Books { get; } = [];
-    public ObservableCollection<string> StatusFilters { get; }
-
-    [ObservableProperty]
-    private string selectedStatus = "All";
 
     [ObservableProperty]
     private bool isBusy;
 
     [ObservableProperty]
     private bool isEmpty = true;
-
-    [ObservableProperty]
-    private string emptyTitle = "Your shelves are empty";
-
-    [ObservableProperty]
-    private string emptyMessage = "Import EPUB or TXT books already on this device. PAGELY works fully offline.";
-
-    partial void OnSelectedStatusChanged(string value) => ApplyFilter();
 
     [RelayCommand]
     public async Task LoadAsync()
@@ -48,7 +34,7 @@ public partial class LibraryViewModel : ObservableObject
         {
             IsBusy = true;
             _all = await _database.GetBooksAsync();
-            ApplyFilter();
+            Apply();
         }
         catch (Exception ex)
         {
@@ -104,16 +90,9 @@ public partial class LibraryViewModel : ObservableObject
         await Shell.Current.GoToAsync($"reader?BookId={book.Id}");
     }
 
-    private void ApplyFilter()
+    private void Apply()
     {
-        IEnumerable<Book> query = _all;
-        if (!string.Equals(SelectedStatus, "All", StringComparison.OrdinalIgnoreCase))
-        {
-            var status = ReadingStatusDisplay.FromLabel(SelectedStatus);
-            query = query.Where(b => b.ReadingStatus == status);
-        }
-
-        var list = query.OrderByDescending(b => b.LastReadAt ?? DateTime.MinValue)
+        var list = _all.OrderByDescending(b => b.LastReadAt ?? DateTime.MinValue)
             .ThenBy(b => b.Title)
             .ToList();
 
@@ -124,15 +103,5 @@ public partial class LibraryViewModel : ObservableObject
         }
 
         IsEmpty = Books.Count == 0;
-        if (_all.Count == 0)
-        {
-            EmptyTitle = "Your shelves are empty";
-            EmptyMessage = "Import EPUB or TXT books already on this device. PAGELY works fully offline.";
-        }
-        else
-        {
-            EmptyTitle = "Nothing in this shelf";
-            EmptyMessage = "Try another reading status, or import another book.";
-        }
     }
 }

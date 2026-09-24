@@ -8,38 +8,29 @@
     x:Name="History"
     x:DataType="vm:HistoryViewModel"
     Title="History"
+    Shell.NavBarIsVisible="False"
     BackgroundColor="{StaticResource Paper}">
 
     <ScrollView>
         <VerticalStackLayout Padding="20,18,20,40" Spacing="16">
-            <Label FontAttributes="Bold" FontSize="28" FontFamily="OpenSansSemibold" Text="History" TextColor="{StaticResource Ink}" />
+            <Label Style="{StaticResource PageTitle}" Text="History" />
 
             <CollectionView
                 IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBool}}"
                 HeightRequest="180"
-                ItemsSource="{Binding ContinueReading}"
-                BackgroundColor="Transparent">
+                ItemsSource="{Binding ContinueReading}">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout ItemSpacing="12" Orientation="Horizontal" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.Header>
-                    <Label FontAttributes="Bold" FontSize="15" FontFamily="OpenSansSemibold" Text="Continue reading" TextColor="{StaticResource InkSoft}" Margin="0,0,0,4" />
+                    <Label Margin="0,0,0,4" Style="{StaticResource SectionCaption}" Text="CONTINUE READING" />
                 </CollectionView.Header>
                 <CollectionView.EmptyView>
-                    <Label FontSize="13" FontFamily="OpenSansRegular" Text="Open a book and PAGELY will remember where you stopped." TextColor="{StaticResource Muted}" Margin="0,4" />
+                    <Label Margin="0,4" Style="{StaticResource Caption}" Text="Open a book and PAGELY will remember where you stopped." />
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Book">
-                        <Border
-                            BackgroundColor="{StaticResource Card}"
-                            Padding="14"
-                            Stroke="{StaticResource Divider}"
-                            StrokeShape="RoundRectangle 16"
-                            StrokeThickness="0.5"
-                            WidthRequest="140">
-                            <Border.Shadow>
-                                <Shadow Brush="Black" Opacity="0.06" Radius="12" Offset="0,2" />
-                            </Border.Shadow>
+                        <Border Style="{StaticResource CardBorder}" WidthRequest="140">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding BindingContext.OpenBookCommand, Source={x:Reference History}}"
@@ -49,45 +40,42 @@
                                 <Border
                                     BackgroundColor="{StaticResource Spine}"
                                     HeightRequest="80"
-                                    StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 12">
+                                    StrokeShape="RoundRectangle 8"
+                                    StrokeThickness="0">
                                     <Label
-                                        FontAttributes="Bold"
-                                        FontSize="22"
                                         FontFamily="OpenSansSemibold"
+                                        FontSize="22"
                                         HorizontalOptions="Center"
                                         Text="{Binding Initial}"
                                         TextColor="White"
                                         VerticalOptions="Center" />
                                 </Border>
-                                <Label FontAttributes="Bold" FontSize="12" FontFamily="OpenSansSemibold" LineBreakMode="TailTruncation" MaxLines="2" Text="{Binding Title}" TextColor="{StaticResource Ink}" />
-                                <Label FontSize="11" FontFamily="OpenSansRegular" Text="{Binding ProgressLabel}" TextColor="{StaticResource Muted}" />
+                                <Label
+                                    FontFamily="OpenSansSemibold"
+                                    FontSize="12"
+                                    LineBreakMode="TailTruncation"
+                                    MaxLines="2"
+                                    Text="{Binding Title}"
+                                    TextColor="{StaticResource Ink}" />
+                                <Label Style="{StaticResource Caption}" Text="{Binding ProgressLabel}" />
                             </VerticalStackLayout>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <Label FontAttributes="Bold" FontSize="18" FontFamily="OpenSansSemibold" Text="Recent activity" TextColor="{StaticResource Ink}" />
+            <Label Style="{StaticResource SectionCaption}" Text="RECENT ACTIVITY" />
 
-            <CollectionView ItemsSource="{Binding Events}" BackgroundColor="Transparent">
+            <CollectionView ItemsSource="{Binding Events}">
                 <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="8" />
+                    <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.EmptyView>
-                    <Label FontSize="13" FontFamily="OpenSansRegular" Text="No reading activity yet." TextColor="{StaticResource Muted}" Margin="0,8" />
+                    <Label Margin="0,8" Style="{StaticResource Caption}" Text="No reading activity yet." />
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:ReadingEvent">
-                        <Border
-                            BackgroundColor="{StaticResource Card}"
-                            Padding="14"
-                            Stroke="{StaticResource Divider}"
-                            StrokeShape="RoundRectangle 14"
-                            StrokeThickness="0.5">
-                            <Border.Shadow>
-                                <Shadow Brush="Black" Opacity="0.04" Radius="8" Offset="0,2" />
-                            </Border.Shadow>
+                        <Border Style="{StaticResource CardBorder}">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding BindingContext.OpenEventCommand, Source={x:Reference History}}"
@@ -95,10 +83,19 @@
                             </Border.GestureRecognizers>
                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                                 <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                    <Label FontAttributes="Bold" FontSize="14" FontFamily="OpenSansSemibold" LineBreakMode="TailTruncation" Text="{Binding BookTitle}" TextColor="{StaticResource Ink}" />
-                                    <Label FontSize="12" FontFamily="OpenSansRegular" Text="{Binding BookAuthor}" TextColor="{StaticResource Muted}" />
+                                    <Label
+                                        FontFamily="OpenSansSemibold"
+                                        FontSize="14"
+                                        LineBreakMode="TailTruncation"
+                                        Text="{Binding BookTitle}"
+                                        TextColor="{StaticResource Ink}" />
+                                    <Label Style="{StaticResource Caption}" Text="{Binding BookAuthor}" />
                                 </VerticalStackLayout>
-                                <Label Grid.Column="1" FontSize="11" FontFamily="OpenSansRegular" Text="{Binding ReadAt, StringFormat='{0:MMM d}'}" TextColor="{StaticResource Muted}" VerticalOptions="Center" />
+                                <Label
+                                    Grid.Column="1"
+                                    Style="{StaticResource Caption}"
+                                    Text="{Binding ReadAt, StringFormat='{0:MMM d}'}"
+                                    VerticalOptions="Center" />
                             </Grid>
                         </Border>
                     </DataTemplate>

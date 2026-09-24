@@ -119,17 +119,7 @@
                     IsEnabled="{Binding CanGoNext}"
                     HeightRequest="54"
                     CornerRadius="24"
-                    Text="Next →">
-
-                    <Button.Shadow>
-                        <Shadow
-                            Brush="Black"
-                            Opacity="0.08"
-                            Radius="20"
-                            Offset="0,4" />
-                    </Button.Shadow>
-
-                </Button>
+                    Text="Next →" />
 
             </Grid>
 
