@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="PAGELY.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:PAGELY.Views"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.BackgroundColor="{StaticResource Surface}"
+    Shell.TitleColor="{StaticResource Ink}"
+    Shell.ForegroundColor="{StaticResource Primary}"
+    Shell.TabBarBackgroundColor="{StaticResource Card}"
+    Shell.TabBarTitleColor="{StaticResource Primary}"
+    Shell.TabBarUnselectedColor="{StaticResource Muted}"
+    Shell.NavBarHasShadow="False"
+    Shell.DisabledColor="{StaticResource PrimaryDark}"
+    Shell.TabBarIsVisible="True"
+    Title="PAGELY">
+
+    <TabBar x:Name="MainTabBar">
+        <Tab Title="Library">
+            <ShellContent ContentTemplate="{DataTemplate views:LibraryPage}" Route="library" />
+        </Tab>
+        <Tab Title="Search">
+            <ShellContent ContentTemplate="{DataTemplate views:SearchPage}" Route="search" />
+        </Tab>
+        <Tab Title="History">
+            <ShellContent ContentTemplate="{DataTemplate views:HistoryPage}" Route="history" />
+        </Tab>
+        <Tab Title="Stats">
+            <ShellContent ContentTemplate="{DataTemplate views:StatsPage}" Route="stats" />
+        </Tab>
+    </TabBar>
+
+    <ShellContent
+        Route="reader"
+        ContentTemplate="{DataTemplate views:ReaderPage}"
+        Shell.TabBarIsVisible="False"
+        Shell.NavBarIsVisible="False" />
+    <ShellContent
+        Route="bookdetail"
+        ContentTemplate="{DataTemplate views:BookDetailPage}"
+        Shell.TabBarIsVisible="False"
+        Shell.NavBarIsVisible="False" />
+</Shell>

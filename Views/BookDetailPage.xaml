@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="PAGELY.Views.BookDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:PAGELY.ViewModels"
+    x:DataType="vm:BookDetailViewModel"
+    Title="Book"
+    BackgroundColor="{StaticResource Paper}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <Border
+            BackgroundColor="{StaticResource Surface}"
+            StrokeThickness="0"
+            StrokeShape="RoundRectangle 0,0,24,24">
+            <Border.Shadow>
+                <Shadow Brush="Black" Opacity="0.08" Radius="20" Offset="0,4" />
+            </Border.Shadow>
+            <Grid ColumnDefinitions="Auto,*" Padding="12,12,16,12">
+                <Button
+                    Grid.Column="0"
+                    Text="←"
+                    FontSize="20"
+                    WidthRequest="44"
+                    HeightRequest="44"
+                    CornerRadius="22"
+                    BackgroundColor="{StaticResource SurfaceAlt}"
+                    TextColor="{StaticResource Ink}"
+                    Padding="0"
+                    Clicked="OnBackClicked"
+                    VerticalOptions="Center" />
+                <Label
+                    Grid.Column="1"
+                    FontAttributes="Bold"
+                    FontFamily="OpenSansSemibold"
+                    FontSize="18"
+                    VerticalOptions="Center"
+                    Padding="12,0"
+                    Text="Book Details"
+                    TextColor="{StaticResource Ink}" />
+            </Grid>
+        </Border>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20,12,20,40" Spacing="14">
+                <Border
+                    BackgroundColor="{StaticResource Card}"
+                    Padding="18"
+                    Stroke="{StaticResource Divider}"
+                    StrokeShape="RoundRectangle 20"
+                    StrokeThickness="0.5">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Opacity="0.06" Radius="12" Offset="0,2" />
+                    </Border.Shadow>
+                    <Grid ColumnDefinitions="72,*" ColumnSpacing="14">
+                        <Border
+                            BackgroundColor="{StaticResource Spine}"
+                            HeightRequest="100"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 14"
+                            WidthRequest="72">
+                            <Grid>
+                                <Image
+                                    Aspect="AspectFill"
+                                    IsVisible="{Binding Book.CoverPath, Converter={StaticResource HasValue}}"
+                                    Source="{Binding Book.CoverPath}" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="26"
+                                    FontFamily="OpenSansSemibold"
+                                    HorizontalOptions="Center"
+                                    IsVisible="{Binding Book.CoverPath, Converter={StaticResource InverseHasValue}}"
+                                    Text="{Binding Book.Initial}"
+                                    TextColor="White"
+                                    VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="18"
+                                FontFamily="OpenSansSemibold"
+                                LineBreakMode="WordWrap"
+                                Text="{Binding Title}"
+                                TextColor="{StaticResource Ink}" />
+                            <Label
+                                FontSize="13"
+                                FontFamily="OpenSansRegular"
+                                Text="{Binding Author}"
+                                TextColor="{StaticResource Muted}" />
+                            <Label
+                                FontSize="12"
+                                FontFamily="OpenSansRegular"
+                                Text="{Binding Book.LastReadLabel}"
+                                TextColor="{StaticResource Muted}" />
+                            <Border
+                                BackgroundColor="{StaticResource SurfaceAlt}"
+                                Padding="10,4"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 12"
+                                HorizontalOptions="Start"
+                                Margin="0,4,0,0">
+                                <Label
+                                    FontSize="11"
+                                    FontAttributes="Bold"
+                                    FontFamily="OpenSansSemibold"
+                                    Text="{Binding SelectedStatus}"
+                                    TextColor="{Binding SelectedStatus, Converter={StaticResource StatusColor}}" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <Border
+                    BackgroundColor="{StaticResource Surface}"
+                    Padding="14"
+                    StrokeShape="RoundRectangle 16"
+                    StrokeThickness="0">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
+                        <ProgressBar
+                            Progress="{Binding Book.ProgressPercent, Converter={StaticResource PercentToProgress}}"
+                            ProgressColor="{StaticResource Accent}"
+                            HeightRequest="6"
+                            VerticalOptions="Center"
+                            BackgroundColor="{StaticResource SurfaceAlt}" />
+                        <Label
+                            Grid.Column="1"
+                            Text="{Binding Book.ProgressLabel}"
+                            FontAttributes="Bold"
+                            FontFamily="OpenSansSemibold"
+                            FontSize="13"
+                            VerticalOptions="Center"
+                            TextColor="{StaticResource InkSoft}" />
+                    </Grid>
+                </Border>
+
+                <Label FontAttributes="Bold" FontSize="13" FontFamily="OpenSansSemibold" Text="Reading status" TextColor="{StaticResource Muted}" Margin="4,0" />
+                <Picker
+                    ItemsSource="{Binding StatusOptions}"
+                    SelectedItem="{Binding SelectedStatus}"
+                    BackgroundColor="{StaticResource Card}"
+                    TextColor="{StaticResource Ink}"
+                    TitleColor="{StaticResource Muted}"
+                    HeightRequest="48"
+                    FontFamily="OpenSansRegular" />
+
+                <VerticalStackLayout Spacing="10" Margin="0,8,0,0">
+                    <Button
+                        Command="{Binding ReadCommand}"
+                        Style="{StaticResource ButtonPrimary}"
+                        FontAttributes="Bold"
+                        FontFamily="OpenSansSemibold"
+                        HeightRequest="52"
+                        CornerRadius="24"
+                        Text="Read">
+                        <Button.Shadow>
+                            <Shadow Brush="Black" Opacity="0.08" Radius="20" Offset="0,4" />
+                        </Button.Shadow>
+                    </Button>
+                    <Button
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource Danger}"
+                        FontFamily="OpenSansRegular"
+                        FontSize="13"
+                        HeightRequest="48"
+                        CornerRadius="24"
+                        BorderWidth="1"
+                        BorderColor="{StaticResource Divider}"
+                        Command="{Binding DeleteCommand}"
+                        Text="Remove from library" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

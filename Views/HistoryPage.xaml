@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="PAGELY.Views.HistoryPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:PAGELY.Models"
+    xmlns:vm="clr-namespace:PAGELY.ViewModels"
+    x:Name="History"
+    x:DataType="vm:HistoryViewModel"
+    Title="History"
+    BackgroundColor="{StaticResource Paper}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,18,20,40" Spacing="16">
+            <Label FontAttributes="Bold" FontSize="28" FontFamily="OpenSansSemibold" Text="History" TextColor="{StaticResource Ink}" />
+
+            <CollectionView
+                IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBool}}"
+                HeightRequest="180"
+                ItemsSource="{Binding ContinueReading}"
+                BackgroundColor="Transparent">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="12" Orientation="Horizontal" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.Header>
+                    <Label FontAttributes="Bold" FontSize="15" FontFamily="OpenSansSemibold" Text="Continue reading" TextColor="{StaticResource InkSoft}" Margin="0,0,0,4" />
+                </CollectionView.Header>
+                <CollectionView.EmptyView>
+                    <Label FontSize="13" FontFamily="OpenSansRegular" Text="Open a book and PAGELY will remember where you stopped." TextColor="{StaticResource Muted}" Margin="0,4" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Book">
+                        <Border
+                            BackgroundColor="{StaticResource Card}"
+                            Padding="14"
+                            Stroke="{StaticResource Divider}"
+                            StrokeShape="RoundRectangle 16"
+                            StrokeThickness="0.5"
+                            WidthRequest="140">
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Opacity="0.06" Radius="12" Offset="0,2" />
+                            </Border.Shadow>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding BindingContext.OpenBookCommand, Source={x:Reference History}}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="6">
+                                <Border
+                                    BackgroundColor="{StaticResource Spine}"
+                                    HeightRequest="80"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 12">
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="22"
+                                        FontFamily="OpenSansSemibold"
+                                        HorizontalOptions="Center"
+                                        Text="{Binding Initial}"
+                                        TextColor="White"
+                                        VerticalOptions="Center" />
+                                </Border>
+                                <Label FontAttributes="Bold" FontSize="12" FontFamily="OpenSansSemibold" LineBreakMode="TailTruncation" MaxLines="2" Text="{Binding Title}" TextColor="{StaticResource Ink}" />
+                                <Label FontSize="11" FontFamily="OpenSansRegular" Text="{Binding ProgressLabel}" TextColor="{StaticResource Muted}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label FontAttributes="Bold" FontSize="18" FontFamily="OpenSansSemibold" Text="Recent activity" TextColor="{StaticResource Ink}" />
+
+            <CollectionView ItemsSource="{Binding Events}" BackgroundColor="Transparent">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="8" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.EmptyView>
+                    <Label FontSize="13" FontFamily="OpenSansRegular" Text="No reading activity yet." TextColor="{StaticResource Muted}" Margin="0,8" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:ReadingEvent">
+                        <Border
+                            BackgroundColor="{StaticResource Card}"
+                            Padding="14"
+                            Stroke="{StaticResource Divider}"
+                            StrokeShape="RoundRectangle 14"
+                            StrokeThickness="0.5">
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Opacity="0.04" Radius="8" Offset="0,2" />
+                            </Border.Shadow>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding BindingContext.OpenEventCommand, Source={x:Reference History}}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <Label FontAttributes="Bold" FontSize="14" FontFamily="OpenSansSemibold" LineBreakMode="TailTruncation" Text="{Binding BookTitle}" TextColor="{StaticResource Ink}" />
+                                    <Label FontSize="12" FontFamily="OpenSansRegular" Text="{Binding BookAuthor}" TextColor="{StaticResource Muted}" />
+                                </VerticalStackLayout>
+                                <Label Grid.Column="1" FontSize="11" FontFamily="OpenSansRegular" Text="{Binding ReadAt, StringFormat='{0:MMM d}'}" TextColor="{StaticResource Muted}" VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

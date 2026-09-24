@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="PAGELY.Views.SearchPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:PAGELY.Models"
+    xmlns:vm="clr-namespace:PAGELY.ViewModels"
+    x:Name="Search"
+    x:DataType="vm:SearchViewModel"
+    Title="Search"
+    BackgroundColor="{StaticResource Paper}">
+
+    <Grid RowDefinitions="Auto,*">
+        <VerticalStackLayout Padding="20,18" Spacing="12">
+            <Label FontAttributes="Bold" FontSize="28" FontFamily="OpenSansSemibold" Text="Search" TextColor="{StaticResource Ink}" />
+            <Border
+                BackgroundColor="{StaticResource Card}"
+                Stroke="{StaticResource Divider}"
+                StrokeShape="RoundRectangle 24"
+                StrokeThickness="0.5"
+                Padding="3">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.08" Radius="20" Offset="0,4" />
+                </Border.Shadow>
+                <SearchBar
+                    Placeholder="Title, author, genre, or status"
+                    Text="{Binding Query}"
+                    BackgroundColor="{StaticResource SurfaceAlt}"
+                    TextColor="{StaticResource Ink}"
+                    PlaceholderColor="{StaticResource Muted}"
+                    CancelButtonColor="{StaticResource Primary}"
+                    FontFamily="OpenSansRegular"
+                    HeightRequest="50" />
+            </Border>
+            <Border
+                BackgroundColor="{StaticResource Card}"
+                Padding="16"
+                Stroke="{StaticResource Divider}"
+                StrokeShape="RoundRectangle 20"
+                StrokeThickness="0.5"
+                IsVisible="{Binding IsFilterVisible}">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.08" Radius="20" Offset="0,4" />
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <Picker
+                            Title="Status"
+                            ItemsSource="{Binding StatusFilters}"
+                            SelectedItem="{Binding SelectedStatus}"
+                            BackgroundColor="{StaticResource Surface}"
+                            TextColor="{StaticResource Ink}"
+                            TitleColor="{StaticResource Muted}"
+                            HeightRequest="46"
+                            FontFamily="OpenSansRegular" />
+                        <Picker
+                            Grid.Column="1"
+                            Title="Genre"
+                            ItemsSource="{Binding Genres}"
+                            SelectedItem="{Binding SelectedGenre}"
+                            BackgroundColor="{StaticResource Surface}"
+                            TextColor="{StaticResource Ink}"
+                            TitleColor="{StaticResource Muted}"
+                            HeightRequest="46"
+                            FontFamily="OpenSansRegular" />
+                    </Grid>
+                    <Picker
+                        Title="Sort by"
+                        ItemsSource="{Binding SortOptions}"
+                        SelectedItem="{Binding SelectedSort}"
+                        BackgroundColor="{StaticResource Surface}"
+                        TextColor="{StaticResource Ink}"
+                        TitleColor="{StaticResource Muted}"
+                        HeightRequest="46"
+                        FontFamily="OpenSansRegular" />
+                </VerticalStackLayout>
+            </Border>
+            <HorizontalStackLayout Spacing="8">
+            <Button
+                Clicked="OnFilterToggleClicked"
+                Style="{StaticResource ButtonSecondary}"
+                HeightRequest="38"
+                Padding="14,0"
+                FontSize="13"
+                FontFamily="OpenSansRegular"
+                CornerRadius="19"
+                Text="⚙ Filters" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+        <CollectionView
+            Grid.Row="1"
+            IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBool}}"
+            ItemsSource="{Binding Books}"
+            SelectionMode="None"
+            BackgroundColor="Transparent">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="12" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Book">
+                    <Grid Padding="20,0">
+                        <Border
+                            BackgroundColor="{StaticResource Card}"
+                            Padding="18"
+                            Stroke="{StaticResource Divider}"
+                            StrokeShape="RoundRectangle 20"
+                            StrokeThickness="0.5">
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Opacity="0.08" Radius="20" Offset="0,4" />
+                            </Border.Shadow>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding BindingContext.OpenCommand, Source={x:Reference Search}}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="8">
+                                <Label FontAttributes="Bold" FontSize="17" FontFamily="OpenSansSemibold" LineBreakMode="TailTruncation" Text="{Binding Title}" TextColor="{StaticResource Ink}" />
+                                <Label FontSize="13" FontFamily="OpenSansRegular" Text="{Binding Author}" TextColor="{StaticResource Muted}" />
+                                <HorizontalStackLayout Spacing="10">
+                                    <Border
+                                        BackgroundColor="{StaticResource SurfaceAlt}"
+                                        Padding="10,4"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 18">
+                                        <Label FontSize="12" FontFamily="OpenSansRegular" Text="{Binding Genre}" TextColor="{StaticResource Spine}" />
+                                    </Border>
+                                    <Border
+                                        BackgroundColor="{StaticResource SurfaceAlt}"
+                                        Padding="10,4"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 18">
+                                        <Label FontSize="12" FontAttributes="Bold" FontFamily="OpenSansSemibold" Text="{Binding StatusLabel}" TextColor="{Binding StatusLabel, Converter={StaticResource StatusColor}}" />
+                                    </Border>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <VerticalStackLayout
+            Grid.Row="1"
+            IsVisible="{Binding IsEmpty}"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Padding="40,32"
+            Spacing="10">
+            <Label
+                FontAttributes="Bold"
+                FontSize="22"
+                FontFamily="OpenSansSemibold"
+                HorizontalTextAlignment="Center"
+                Text="No books found"
+                TextColor="{StaticResource Ink}" />
+            <Label
+                FontSize="14"
+                FontFamily="OpenSansRegular"
+                HorizontalTextAlignment="Center"
+                MaximumWidthRequest="280"
+                Text="No books match those filters. Try a different title, author, or genre."
+                TextColor="{StaticResource Muted}" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

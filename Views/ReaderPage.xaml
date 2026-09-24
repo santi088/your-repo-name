@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="PAGELY.Views.ReaderPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:PAGELY.ViewModels"
+    xmlns:controls="clr-namespace:PAGELY.Controls"
+    x:DataType="vm:ReaderViewModel"
+    Title="{Binding Header}"
+    BackgroundColor="{StaticResource Paper}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <Border
+            BackgroundColor="{StaticResource Surface}"
+            StrokeThickness="0"
+            StrokeShape="RoundRectangle 0,0,24,24">
+
+            <Grid ColumnDefinitions="Auto,*" Padding="12,12,16,12">
+
+                <Button
+                    Grid.Column="0"
+                    Text="←"
+                    FontSize="20"
+                    WidthRequest="44"
+                    HeightRequest="44"
+                    CornerRadius="22"
+                    BackgroundColor="{StaticResource SurfaceAlt}"
+                    TextColor="{StaticResource Ink}"
+                    Padding="0"
+                    Clicked="OnBackClicked"
+                    VerticalOptions="Center" />
+
+                <VerticalStackLayout
+                    Grid.Column="1"
+                    Spacing="2"
+                    VerticalOptions="Center"
+                    Padding="12,0">
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontFamily="OpenSansSemibold"
+                        FontSize="16"
+                        LineBreakMode="TailTruncation"
+                        Text="{Binding Header}"
+                        TextColor="{StaticResource Ink}" />
+
+                    <Label
+                        FontSize="11"
+                        FontFamily="OpenSansRegular"
+                        Text="{Binding ProgressLabel}"
+                        TextColor="{StaticResource Muted}" />
+
+                </VerticalStackLayout>
+
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Padding="16,8">
+
+            <ProgressBar
+                Progress="{Binding Book.ProgressPercent, Converter={StaticResource PercentToProgress}}"
+                ProgressColor="{StaticResource Accent}"
+                HeightRequest="4"
+                VerticalOptions="Start"
+                Margin="0,0,0,8"
+                BackgroundColor="{StaticResource SurfaceAlt}" />
+
+            <!-- Normal text/EPUB/HTML reader -->
+            <WebView
+                x:Name="ReaderView"
+                Margin="0,12,0,0"
+                Navigated="OnWebViewNavigated"
+                Source="{Binding PageSource}"
+                IsVisible="{Binding IsPdfMode, Converter={StaticResource InverseBool}}"
+                VerticalOptions="Fill"
+                HorizontalOptions="Fill" />
+
+            <!-- Native PDF reader -->
+            <controls:PdfViewer
+                x:Name="PdfReaderView"
+                Margin="0,12,0,0"
+                IsVisible="{Binding IsPdfMode}"
+                BackgroundColor="#1A1A1A"
+                SourcePath="{Binding PdfSourcePath}"
+                PagePaths="{Binding PdfPagePaths}"
+                CurrentPageIndex="{Binding CurrentPdfPage}"
+                PageScrolled="OnPdfPageScrolled"
+                VerticalOptions="Fill"
+                HorizontalOptions="Fill" />
+
+    </Grid>
+
+        <Border
+            Grid.Row="2"
+            BackgroundColor="{StaticResource Surface}"
+            StrokeThickness="0"
+            StrokeShape="RoundRectangle 24,24,0,0"
+            IsVisible="{Binding IsPdfMode, Converter={StaticResource InverseBool}}">
+
+            <Grid
+                ColumnDefinitions="*,*"
+                ColumnSpacing="14"
+                Padding="20,16,20,22">
+
+                <Button
+                    Style="{StaticResource ButtonSecondary}"
+                    Command="{Binding PreviousCommand}"
+                    IsEnabled="{Binding CanGoPrevious}"
+                    HeightRequest="54"
+                    CornerRadius="24"
+                    Text="← Previous" />
+
+                <Button
+                    Grid.Column="1"
+                    Style="{StaticResource ButtonPrimary}"
+                    Command="{Binding NextCommand}"
+                    IsEnabled="{Binding CanGoNext}"
+                    HeightRequest="54"
+                    CornerRadius="24"
+                    Text="Next →">
+
+                    <Button.Shadow>
+                        <Shadow
+                            Brush="Black"
+                            Opacity="0.08"
+                            Radius="20"
+                            Offset="0,4" />
+                    </Button.Shadow>
+
+                </Button>
+
+            </Grid>
+
+        </Border>
+
+    </Grid>
+
+</ContentPage>
