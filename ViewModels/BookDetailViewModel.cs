@@ -10,11 +10,16 @@ public partial class BookDetailViewModel : ObservableObject
 {
     private readonly DatabaseService _database;
     private readonly BookImportService _import;
+    private readonly IPdfRendererService _pdfRenderer;
 
-    public BookDetailViewModel(DatabaseService database, BookImportService import)
+    public BookDetailViewModel(
+        DatabaseService database,
+        BookImportService import,
+        IPdfRendererService pdfRenderer)
     {
         _database = database;
         _import = import;
+        _pdfRenderer = pdfRenderer;
         StatusOptions = ReadingStatusDisplay.FilterOptions.Skip(1).ToList();
     }
 
@@ -52,10 +57,44 @@ public partial class BookDetailViewModel : ObservableObject
             Genre = Book.Genre;
             SelectedStatus = Book.StatusLabel;
             OnPropertyChanged(nameof(Book));
+
+            await RefreshPdfPageCountAsync(Book);
         }
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Error", $"Could not load book details: {ex.Message}", "OK");
+        }
+    }
+
+    /// <summary>
+    /// Fills in a PDF's real page count when the stored one is still the import
+    /// placeholder. Documents imported before the native renderer existed - or
+    /// where reading the count failed during import - would otherwise stay at
+    /// "1" forever while the reader shows the true number.
+    /// </summary>
+    private async Task RefreshPdfPageCountAsync(Book book)
+    {
+        if (!string.Equals(book.FileType, "pdf", StringComparison.OrdinalIgnoreCase) ||
+            book.TotalChapters > 1)
+        {
+            return;
+        }
+
+        try
+        {
+            var pageCount = await _pdfRenderer.GetPageCountAsync(book.FilePath);
+            if (pageCount <= 0 || pageCount == book.TotalChapters)
+            {
+                return;
+            }
+
+            book.TotalChapters = pageCount;
+            await _database.SaveBookAsync(book);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(
+                $"BOOK DETAIL: PDF page count refresh failed: {ex.GetType().Name}: {ex.Message}");
         }
     }
 

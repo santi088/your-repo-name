@@ -87,8 +87,13 @@ public class BookImportService
                         totalChapters = pageCount;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    // The book stays usable: both BookDetailViewModel and the reader
+                    // retry this count, so failing here only costs accuracy until one
+                    // of them fills it in.
+                    Console.WriteLine(
+                        $"IMPORT: PDF page count failed: {ex.GetType().Name}: {ex.Message}");
                 }
             }
 

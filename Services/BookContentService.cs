@@ -80,6 +80,11 @@ public class BookContentService
     private static BookParseResult ParsePdf(string filePath, string? originalFileName = null)
     {
         var info = PdfService.ReadInfo(filePath, originalFileName);
+
+        // The page count is not known here: the document has to be opened with the
+        // platform PDF engine for that. BookImportService does exactly that right
+        // after parsing and overwrites this placeholder chapter count with the real
+        // page count from IPdfRendererService.
         return new BookParseResult(info.Title, info.Author, "Uncategorized", 1, info.CoverBytes, ["__PDF_VIEWER__"]);
     }
 
