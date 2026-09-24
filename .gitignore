@@ -3,4 +3,12 @@ obj/
 .vs/
 *.user
 *.suo
+
+# Local crash logs and diagnostic dumps
+pagely-crash.txt
+*.crash.txt
+
+# macOS
+.DS_Store
 *.DS_Store
+
