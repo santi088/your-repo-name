@@ -24,8 +24,10 @@ public partial class LibraryViewModel : ObservableObject
     [ObservableProperty]
     private bool isBusy;
 
+    // Starts false: the empty state belongs to a loaded library, so it is never
+    // flashed before the first load finishes. LoadAsync sets the real value.
     [ObservableProperty]
-    private bool isEmpty = true;
+    private bool isEmpty;
 
     [RelayCommand]
     public async Task LoadAsync()

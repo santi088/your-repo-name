@@ -18,8 +18,9 @@ public partial class HistoryViewModel : ObservableObject
     public ObservableCollection<Book> ContinueReading { get; } = [];
     public ObservableCollection<ReadingEvent> Events { get; } = [];
 
+    // Starts false so the "nothing here yet" state waits for the history to load.
     [ObservableProperty]
-    private bool isEmpty = true;
+    private bool isEmpty;
 
     [RelayCommand]
     public async Task LoadAsync()

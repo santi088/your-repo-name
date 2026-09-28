@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6B3E2E</color>
-    <color name="colorPrimaryDark">#4A2A1F</color>
-    <color name="colorAccent">#4A6B58</color>
+    <!-- Native theme colours (ripples, selection handles, dialogs) kept in step with
+         the app's warm paper palette defined in Resources/Styles/Colors.xaml. -->
+    <color name="colorPrimary">#7A6244</color>
+    <color name="colorPrimaryDark">#5C4A34</color>
+    <color name="colorAccent">#A98654</color>
 </resources>

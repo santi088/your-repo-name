@@ -44,8 +44,9 @@ public class PdfViewerHandler : ViewHandler<PdfViewer, RecyclerView>
             HasFixedSize = false
         };
 
-        // Dark background matching reader theme
-        recyclerView.SetBackgroundColor(global::Android.Graphics.Color.Rgb(0x1A, 0x1A, 0x1A));
+        // Warm sand backdrop: the white page cards stay clearly separated from the
+        // surrounding UI without the harshness of a black reader background.
+        recyclerView.SetBackgroundColor(global::Android.Graphics.Color.Rgb(0xE9, 0xDF, 0xCE));
 
         _layoutManager = new LinearLayoutManager(context, LinearLayoutManager.Vertical, false);
         recyclerView.SetLayoutManager(_layoutManager);
@@ -259,7 +260,8 @@ internal class PdfPageAdapter : RecyclerView.Adapter
             ViewGroup.LayoutParams.MatchParent,
             _itemHeight);
 
-        int marginPx = (int)(8 * (_context.Resources?.DisplayMetrics?.Density ?? 1.0f));
+        // A comfortable gap so consecutive pages read as separate sheets.
+        int marginPx = (int)(12 * (_context.Resources?.DisplayMetrics?.Density ?? 1.0f));
         layoutParams.SetMargins(0, 0, 0, marginPx);
         container.LayoutParameters = layoutParams;
         container.SetBackgroundColor(global::Android.Graphics.Color.White);
@@ -279,7 +281,7 @@ internal class PdfPageAdapter : RecyclerView.Adapter
                 ViewGroup.LayoutParams.MatchParent,
                 ViewGroup.LayoutParams.MatchParent)
         };
-        placeholder.SetTextColor(global::Android.Graphics.Color.Rgb(0x99, 0x99, 0x99));
+        placeholder.SetTextColor(global::Android.Graphics.Color.Rgb(0x7A, 0x6A, 0x56));
         placeholder.SetTextSize(global::Android.Util.ComplexUnitType.Sp, 14f);
         placeholder.Gravity = GravityFlags.Center;
         placeholder.Text = "Rendering page…";

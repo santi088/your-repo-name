@@ -49,6 +49,12 @@ public class BookContentService
         }
     }
 
+    /// <summary>
+    /// Wraps book HTML in the reader's own stylesheet. Presentation only: the
+    /// paper-toned surface, the reading measure and the comfortable line spacing
+    /// are what make long sessions pleasant, and they match the app background so
+    /// text and chrome feel like one surface.
+    /// </summary>
     public static string WrapHtml(string body) =>
         $$"""
         <!DOCTYPE html>
@@ -59,18 +65,52 @@ public class BookContentService
             html, body {
               margin: 0;
               padding: 0;
-              background: #f8f3e7;
-              color: #3a3226;
+              background: #fbf6ea;
+              color: #402a18;
             }
             body {
               font-family: Georgia, "Times New Roman", serif;
-              font-size: 18px;
-              line-height: 1.75;
-              padding: 8px 4px 48px;
+              font-size: 19px;
+              line-height: 1.85;
+              padding: 22px 22px 64px;
+              max-width: 42em;
+              margin: 0 auto;
+              -webkit-text-size-adjust: 100%;
+              text-rendering: optimizeLegibility;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
             }
-            img, svg, video { max-width: 100%; height: auto; display: block; margin: 0 auto; }
-            a { color: #7d6a52; }
-            h1, h2, h3 { font-weight: 600; line-height: 1.3; }
+            p { margin: 0 0 1.15em; }
+            h1, h2, h3, h4 { font-weight: 600; line-height: 1.3; margin: 1.6em 0 0.6em; }
+            h1:first-child, h2:first-child, h3:first-child, h4:first-child { margin-top: 0; }
+            a { color: #7a6244; text-decoration: underline; }
+            img, svg, video {
+              max-width: 100%;
+              height: auto;
+              display: block;
+              margin: 1.2em auto;
+              border-radius: 8px;
+            }
+            blockquote {
+              margin: 1.4em 0;
+              padding: 0.1em 0 0.1em 1em;
+              border-left: 3px solid #e0d3bd;
+              color: #5f4732;
+            }
+            hr { border: 0; border-top: 1px solid #e8ddcb; margin: 2em 0; }
+            ul, ol { padding-left: 1.3em; margin: 0 0 1.15em; }
+            li { margin: 0.3em 0; }
+            /* Plain text arrives in <pre> blocks; keep it on the same rhythm as prose. */
+            pre {
+              white-space: pre-wrap;
+              font-family: inherit;
+              font-size: 1em;
+              line-height: 1.85;
+              margin: 0 0 1.15em;
+            }
+            code, kbd, samp { font-family: Menlo, Consolas, monospace; font-size: 0.9em; }
+            table { width: 100%; border-collapse: collapse; margin: 1.2em 0; }
+            th, td { padding: 6px 8px; border-bottom: 1px solid #e8ddcb; text-align: left; }
           </style>
         </head>
         <body>{{body}}</body>

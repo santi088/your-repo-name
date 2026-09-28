@@ -23,13 +23,16 @@
         <Setter Property="BackgroundColor" Value="{StaticResource Divider}" />
     </Style>
 
+    <!-- Buttons: one radius (14), one height (48dp touch target), three weights.
+         Primary is the one action worth tapping, Secondary is a tonal surface
+         fill, Icon is a circle for header affordances. -->
     <Style TargetType="Button">
         <Setter Property="TextColor" Value="{StaticResource Ink}" />
-        <Setter Property="BackgroundColor" Value="{StaticResource Secondary}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceAlt}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="BorderWidth" Value="0"/>
-        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="CornerRadius" Value="14"/>
         <Setter Property="Padding" Value="16,10"/>
         <Setter Property="HeightRequest" Value="48"/>
         <Setter Property="MinimumHeightRequest" Value="48"/>
@@ -41,7 +44,12 @@
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
                             <Setter Property="TextColor" Value="{StaticResource Gray400}" />
-                            <Setter Property="BackgroundColor" Value="{StaticResource Gray200}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource Gray100}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource SecondaryAlt}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="PointerOver" />
@@ -53,11 +61,11 @@
     <Style TargetType="Button" x:Key="ButtonPrimary">
         <Setter Property="TextColor" Value="{StaticResource Surface}" />
         <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-        <Setter Property="FontFamily" Value="OpenSansSemiBold"/>
-        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontFamily" Value="OpenSansSemibold"/>
+        <Setter Property="FontSize" Value="15"/>
         <Setter Property="BorderWidth" Value="0"/>
-        <Setter Property="CornerRadius" Value="12"/>
-        <Setter Property="Padding" Value="18,10"/>
+        <Setter Property="CornerRadius" Value="14"/>
+        <Setter Property="Padding" Value="20,10"/>
         <Setter Property="HeightRequest" Value="48"/>
         <Setter Property="MinimumHeightRequest" Value="48"/>
         <Setter Property="MinimumWidthRequest" Value="54"/>
@@ -69,6 +77,11 @@
                         <VisualState.Setters>
                             <Setter Property="TextColor" Value="{StaticResource Gray300}" />
                             <Setter Property="BackgroundColor" Value="{StaticResource Gray400}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource PrimaryDark}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="PointerOver">
@@ -83,13 +96,12 @@
 
     <Style TargetType="Button" x:Key="ButtonSecondary">
         <Setter Property="TextColor" Value="{StaticResource Ink}" />
-        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceAlt}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="BorderWidth" Value="1"/>
-        <Setter Property="BorderColor" Value="{StaticResource Divider}"/>
-        <Setter Property="CornerRadius" Value="12"/>
-        <Setter Property="Padding" Value="18,10"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="BorderWidth" Value="0"/>
+        <Setter Property="CornerRadius" Value="14"/>
+        <Setter Property="Padding" Value="20,10"/>
         <Setter Property="HeightRequest" Value="48"/>
         <Setter Property="MinimumHeightRequest" Value="48"/>
         <Setter Property="MinimumWidthRequest" Value="54"/>
@@ -101,7 +113,11 @@
                         <VisualState.Setters>
                             <Setter Property="TextColor" Value="{StaticResource Gray400}" />
                             <Setter Property="BackgroundColor" Value="{StaticResource Gray100}" />
-                            <Setter Property="BorderColor" Value="{StaticResource Gray200}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource SecondaryAlt}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="PointerOver">
@@ -114,12 +130,88 @@
         </Setter>
     </Style>
 
-    <!-- Shared look: every surface is flat, one hairline, one radius. -->
+    <Style TargetType="Button" x:Key="ButtonIcon">
+        <Setter Property="TextColor" Value="{StaticResource Ink}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceAlt}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="BorderWidth" Value="0"/>
+        <Setter Property="CornerRadius" Value="22"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="WidthRequest" Value="44"/>
+        <Setter Property="HeightRequest" Value="44"/>
+        <Setter Property="MinimumWidthRequest" Value="44"/>
+        <Setter Property="MinimumHeightRequest" Value="44"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{StaticResource Gray400}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource Gray100}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource SecondaryAlt}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource SecondaryAlt}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Button" x:Key="ButtonIconPrimary">
+        <Setter Property="TextColor" Value="{StaticResource Surface}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="BorderWidth" Value="0"/>
+        <Setter Property="CornerRadius" Value="22"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="WidthRequest" Value="44"/>
+        <Setter Property="HeightRequest" Value="44"/>
+        <Setter Property="MinimumWidthRequest" Value="44"/>
+        <Setter Property="MinimumHeightRequest" Value="44"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{StaticResource Gray300}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource Gray400}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource PrimaryDark}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource PrimaryDark}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Shared look: every surface is flat, one hairline, one radius.
+         Radius scale used across the app: sheet 20 · card 16 · control 14 ·
+         chip and cover 10 · icon button and pills are circles. -->
     <Style TargetType="Border" x:Key="CardBorder">
         <Setter Property="BackgroundColor" Value="{StaticResource Card}" />
         <Setter Property="Stroke" Value="{StaticResource Divider}" />
         <Setter Property="StrokeThickness" Value="1" />
-        <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
         <Setter Property="Padding" Value="14" />
     </Style>
 
@@ -127,19 +219,67 @@
         <Setter Property="BackgroundColor" Value="{StaticResource SurfaceAlt}" />
         <Setter Property="Stroke" Value="Transparent" />
         <Setter Property="StrokeThickness" Value="0" />
-        <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-        <Setter Property="Padding" Value="8,3" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+        <Setter Property="Padding" Value="9,4" />
     </Style>
 
+    <!-- Rounded inset field: wraps an Entry, SearchBar or Picker so the control
+         itself never draws the frame. -->
+    <Style TargetType="Border" x:Key="FieldBorder">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceAlt}" />
+        <Setter Property="Stroke" Value="Transparent" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+        <Setter Property="Padding" Value="4,0" />
+    </Style>
+
+    <!-- Track for a rounded progress bar: put a transparent ProgressBar inside. -->
+    <Style TargetType="Border" x:Key="ProgressPill">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceAlt}" />
+        <Setter Property="Stroke" Value="Transparent" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <!-- Type scale: 26 page title · 19 featured · 16 card title · 14 body ·
+         12 meta · 11 section caption. -->
     <Style TargetType="Label" x:Key="PageTitle">
         <Setter Property="TextColor" Value="{StaticResource Ink}" />
-        <Setter Property="FontFamily" Value="OpenSansSemiBold" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
         <Setter Property="FontSize" Value="26" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="PageSubtitle">
+        <Setter Property="TextColor" Value="{StaticResource Muted}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="CardTitle">
+        <Setter Property="TextColor" Value="{StaticResource Ink}" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="LineBreakMode" Value="TailTruncation" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="CardMeta">
+        <Setter Property="TextColor" Value="{StaticResource Muted}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="12.5" />
+        <Setter Property="LineBreakMode" Value="TailTruncation" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="StatValue">
+        <Setter Property="TextColor" Value="{StaticResource Ink}" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
 
     <Style TargetType="Label" x:Key="SectionCaption">
         <Setter Property="TextColor" Value="{StaticResource Muted}" />
-        <Setter Property="FontFamily" Value="OpenSansSemiBold" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
         <Setter Property="FontSize" Value="11" />
         <Setter Property="CharacterSpacing" Value="1.2" />
     </Style>
@@ -412,11 +552,12 @@
         </Setter>
     </Style>
 
+    <!-- Warm, very light shadow: used only where a surface really floats. -->
     <Style TargetType="Shadow">
-        <Setter Property="Radius" Value="20" />
-        <Setter Property="Opacity" Value="0.08" />
-        <Setter Property="Brush" Value="{StaticResource Black}" />
-        <Setter Property="Offset" Value="0,4" />
+        <Setter Property="Radius" Value="18" />
+        <Setter Property="Opacity" Value="0.07" />
+        <Setter Property="Brush" Value="{StaticResource ShadowBrush}" />
+        <Setter Property="Offset" Value="0,3" />
     </Style>
 
     <Style TargetType="Slider">

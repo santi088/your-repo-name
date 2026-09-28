@@ -39,8 +39,9 @@ public partial class SearchViewModel : ObservableObject
     [ObservableProperty]
     private string selectedSort = "Title";
 
+    // Starts false: "no books found" is only true once a search has actually run.
     [ObservableProperty]
-    private bool isEmpty = true;
+    private bool isEmpty;
 
     [ObservableProperty]
     private bool isFilterVisible = false;

@@ -10,152 +10,244 @@
     BackgroundColor="{StaticResource Paper}">
 
     <Grid RowDefinitions="Auto,*">
-        <VerticalStackLayout Padding="20,18,20,10" Spacing="2">
+        <VerticalStackLayout Padding="20,16,20,12" Spacing="2">
             <Label Style="{StaticResource PageTitle}" Text="Statistics" />
-            <Label Style="{StaticResource Caption}" Text="Your reading journey at a glance" />
+            <Label Style="{StaticResource PageSubtitle}" Text="Your reading journey at a glance" />
         </VerticalStackLayout>
 
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Padding="20,0,20,40" Spacing="12">
 
-                <Border Style="{StaticResource CardBorder}">
-                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
-                        <VerticalStackLayout Grid.Column="0" Spacing="6">
-                            <Label Style="{StaticResource SectionCaption}" Text="CURRENT STREAK" />
-                            <Label
-                                FontAttributes="Bold"
-                                FontFamily="OpenSansSemibold"
-                                FontSize="36"
-                                Text="{Binding Stats.CurrentStreak, StringFormat='{0} days'}"
-                                TextColor="{StaticResource Ink}" />
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="End" Spacing="6">
-                            <Label HorizontalOptions="End" Style="{StaticResource SectionCaption}" Text="BEST STREAK" />
-                            <Label
-                                FontAttributes="Bold"
-                                FontFamily="OpenSansSemibold"
-                                FontSize="24"
-                                HorizontalOptions="End"
-                                Text="{Binding Stats.LongestStreak, StringFormat='{0} days'}"
-                                TextColor="{StaticResource Primary}" />
-                        </VerticalStackLayout>
-                    </Grid>
-                </Border>
+                <VerticalStackLayout IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBool}}" Spacing="12">
 
-                <Border Style="{StaticResource CardBorder}">
-                    <VerticalStackLayout Spacing="14">
-                        <Label Style="{StaticResource SectionCaption}" Text="BOOKS" />
-                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
-                            <VerticalStackLayout Spacing="4">
-                                <Label FontAttributes="Bold" FontFamily="OpenSansSemibold" FontSize="28" HorizontalOptions="Center" Text="{Binding Stats.TotalBooks}" TextColor="{StaticResource Primary}" />
-                                <Label HorizontalOptions="Center" Style="{StaticResource Caption}" Text="Total" />
+                    <Border Padding="16" Style="{StaticResource CardBorder}">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                            <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                <Label Style="{StaticResource SectionCaption}" Text="CURRENT STREAK" />
+                                <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
+                                    <Label
+                                        FontFamily="OpenSansSemibold"
+                                        FontSize="34"
+                                        Text="{Binding Stats.CurrentStreak}"
+                                        TextColor="{StaticResource Ink}" />
+                                    <Label
+                                        Grid.Column="1"
+                                        Margin="0,0,0,6"
+                                        Style="{StaticResource PageSubtitle}"
+                                        Text="days"
+                                        VerticalOptions="End" />
+                                </Grid>
                             </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="1" Spacing="4">
-                                <Label FontAttributes="Bold" FontFamily="OpenSansSemibold" FontSize="28" HorizontalOptions="Center" Text="{Binding Stats.CurrentlyReading}" TextColor="{StaticResource Accent}" />
-                                <Label HorizontalOptions="Center" Style="{StaticResource Caption}" Text="Reading" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="2" Spacing="4">
-                                <Label FontAttributes="Bold" FontFamily="OpenSansSemibold" FontSize="28" HorizontalOptions="Center" Text="{Binding Stats.Completed}" TextColor="{StaticResource Success}" />
-                                <Label HorizontalOptions="Center" Style="{StaticResource Caption}" Text="Done" />
+                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="End" Spacing="8">
+                                <Label HorizontalOptions="End" Style="{StaticResource SectionCaption}" Text="BEST STREAK" />
+                                <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
+                                    <Label
+                                        FontFamily="OpenSansSemibold"
+                                        FontSize="22"
+                                        Text="{Binding Stats.LongestStreak}"
+                                        TextColor="{StaticResource Primary}" />
+                                    <Label
+                                        Grid.Column="1"
+                                        Margin="0,0,0,3"
+                                        Style="{StaticResource Caption}"
+                                        Text="days"
+                                        VerticalOptions="End" />
+                                </Grid>
                             </VerticalStackLayout>
                         </Grid>
-                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
-                            <VerticalStackLayout Spacing="4">
-                                <Label FontAttributes="Bold" FontFamily="OpenSansSemibold" FontSize="28" HorizontalOptions="Center" Text="{Binding Stats.ToBeRead}" TextColor="{StaticResource StatusTbr}" />
-                                <Label HorizontalOptions="Center" Style="{StaticResource Caption}" Text="To Read" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="1" Spacing="4">
-                                <Label FontAttributes="Bold" FontFamily="OpenSansSemibold" FontSize="28" HorizontalOptions="Center" Text="{Binding Stats.Dropped}" TextColor="{StaticResource Danger}" />
-                                <Label HorizontalOptions="Center" Style="{StaticResource Caption}" Text="Dropped" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="2" Spacing="4">
-                                <Label FontAttributes="Bold" FontFamily="OpenSansSemibold" FontSize="28" HorizontalOptions="Center" Text="{Binding Stats.BooksReadThisMonth}" TextColor="{StaticResource InkSoft}" />
-                                <Label HorizontalOptions="Center" Style="{StaticResource Caption}" Text="This Month" />
-                            </VerticalStackLayout>
-                        </Grid>
-                    </VerticalStackLayout>
-                </Border>
+                    </Border>
 
-                <Border Style="{StaticResource CardBorder}">
-                    <VerticalStackLayout Spacing="12">
-                        <Label Style="{StaticResource SectionCaption}" Text="READING PROGRESS" />
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
-                            <ProgressBar
+                    <Border Padding="14" Style="{StaticResource CardBorder}">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Style="{StaticResource SectionCaption}" Text="BOOKS" />
+                            <Grid
+                                ColumnDefinitions="*,*,*"
+                                ColumnSpacing="10"
+                                RowDefinitions="Auto,Auto"
+                                RowSpacing="10">
+                                <Border
+                                    Padding="10,12"
+                                    BackgroundColor="{StaticResource SurfaceAlt}"
+                                    StrokeShape="RoundRectangle 14"
+                                    StrokeThickness="0">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Style="{StaticResource StatValue}" Text="{Binding Stats.TotalBooks}" TextColor="{StaticResource Primary}" />
+                                        <Label FontSize="11" HorizontalTextAlignment="Center" Style="{StaticResource Caption}" Text="Total" />
+                                    </VerticalStackLayout>
+                                </Border>
+                                <Border
+                                    Grid.Column="1"
+                                    Padding="10,12"
+                                    BackgroundColor="{StaticResource SurfaceAlt}"
+                                    StrokeShape="RoundRectangle 14"
+                                    StrokeThickness="0">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Style="{StaticResource StatValue}" Text="{Binding Stats.CurrentlyReading}" TextColor="{StaticResource Accent}" />
+                                        <Label FontSize="11" HorizontalTextAlignment="Center" Style="{StaticResource Caption}" Text="Reading" />
+                                    </VerticalStackLayout>
+                                </Border>
+                                <Border
+                                    Grid.Column="2"
+                                    Padding="10,12"
+                                    BackgroundColor="{StaticResource SurfaceAlt}"
+                                    StrokeShape="RoundRectangle 14"
+                                    StrokeThickness="0">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Style="{StaticResource StatValue}" Text="{Binding Stats.Completed}" TextColor="{StaticResource Success}" />
+                                        <Label FontSize="11" HorizontalTextAlignment="Center" Style="{StaticResource Caption}" Text="Finished" />
+                                    </VerticalStackLayout>
+                                </Border>
+                                <Border
+                                    Grid.Row="1"
+                                    Padding="10,12"
+                                    BackgroundColor="{StaticResource SurfaceAlt}"
+                                    StrokeShape="RoundRectangle 14"
+                                    StrokeThickness="0">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Style="{StaticResource StatValue}" Text="{Binding Stats.ToBeRead}" TextColor="{StaticResource InkSoft}" />
+                                        <Label FontSize="11" HorizontalTextAlignment="Center" Style="{StaticResource Caption}" Text="To read" />
+                                    </VerticalStackLayout>
+                                </Border>
+                                <Border
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Padding="10,12"
+                                    BackgroundColor="{StaticResource SurfaceAlt}"
+                                    StrokeShape="RoundRectangle 14"
+                                    StrokeThickness="0">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Style="{StaticResource StatValue}" Text="{Binding Stats.Dropped}" TextColor="{StaticResource Danger}" />
+                                        <Label FontSize="11" HorizontalTextAlignment="Center" Style="{StaticResource Caption}" Text="Dropped" />
+                                    </VerticalStackLayout>
+                                </Border>
+                                <Border
+                                    Grid.Row="1"
+                                    Grid.Column="2"
+                                    Padding="10,12"
+                                    BackgroundColor="{StaticResource SurfaceAlt}"
+                                    StrokeShape="RoundRectangle 14"
+                                    StrokeThickness="0">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Style="{StaticResource StatValue}" Text="{Binding Stats.BooksReadThisMonth}" TextColor="{StaticResource InkSoft}" />
+                                        <Label FontSize="11" HorizontalTextAlignment="Center" Style="{StaticResource Caption}" Text="This month" />
+                                    </VerticalStackLayout>
+                                </Border>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Padding="16" Style="{StaticResource CardBorder}">
+                        <VerticalStackLayout Spacing="12">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <Label Style="{StaticResource SectionCaption}" Text="READING PROGRESS" VerticalOptions="Center" />
+                                <Label
+                                    Grid.Column="1"
+                                    FontFamily="OpenSansSemibold"
+                                    FontSize="16"
+                                    Text="{Binding Stats.AverageProgress, StringFormat='{0:F0}%'}"
+                                    TextColor="{StaticResource InkSoft}" />
+                            </Grid>
+                            <Border HeightRequest="8" Style="{StaticResource ProgressPill}">
+                                <ProgressBar
+                                    BackgroundColor="Transparent"
+                                    HeightRequest="8"
+                                    Progress="{Binding Stats.AverageProgress, Converter={StaticResource PercentToProgress}}"
+                                    ProgressColor="{StaticResource Primary}" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Padding="14" Style="{StaticResource CardBorder}">
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                            <Border
+                                Padding="12"
                                 BackgroundColor="{StaticResource SurfaceAlt}"
-                                HeightRequest="8"
-                                Progress="{Binding Stats.AverageProgress, Converter={StaticResource PercentToProgress}}"
-                                ProgressColor="{StaticResource Accent}"
-                                VerticalOptions="Center" />
-                            <Label
+                                StrokeShape="RoundRectangle 14"
+                                StrokeThickness="0">
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Style="{StaticResource SectionCaption}" Text="READING TIME" />
+                                    <Label
+                                        FontFamily="OpenSansSemibold"
+                                        FontSize="18"
+                                        Text="{Binding Stats.TotalReadingTime}"
+                                        TextColor="{StaticResource Ink}" />
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border
                                 Grid.Column="1"
-                                FontAttributes="Bold"
-                                FontFamily="OpenSansSemibold"
-                                FontSize="14"
-                                Text="{Binding Stats.AverageProgress, StringFormat='{0:F0}%'}"
-                                TextColor="{StaticResource InkSoft}"
-                                VerticalOptions="Center" />
+                                Padding="12"
+                                BackgroundColor="{StaticResource SurfaceAlt}"
+                                StrokeShape="RoundRectangle 14"
+                                StrokeThickness="0">
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Style="{StaticResource SectionCaption}" Text="READING SPEED" />
+                                    <Label
+                                        FontFamily="OpenSansSemibold"
+                                        FontSize="18"
+                                        Text="{Binding Stats.AverageReadingSpeed}"
+                                        TextColor="{StaticResource Accent}" />
+                                </VerticalStackLayout>
+                            </Border>
                         </Grid>
-                    </VerticalStackLayout>
-                </Border>
+                    </Border>
 
-                <Border Style="{StaticResource CardBorder}">
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
-                        <VerticalStackLayout Grid.Column="0" Spacing="6">
-                            <Label Style="{StaticResource SectionCaption}" Text="READING TIME" />
-                            <Label
-                                FontAttributes="Bold"
-                                FontFamily="OpenSansSemibold"
-                                FontSize="24"
-                                Text="{Binding Stats.TotalReadingTime}"
-                                TextColor="{StaticResource Ink}" />
+                    <Border Padding="16" Style="{StaticResource CardBorder}">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Style="{StaticResource SectionCaption}" Text="TOP GENRES" />
+                            <FlexLayout JustifyContent="Start" Wrap="Wrap">
+                                <BindableLayout.ItemsSource>
+                                    <Binding Path="Stats.TopGenres" />
+                                </BindableLayout.ItemsSource>
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <Border
+                                            Margin="0,0,8,8"
+                                            Padding="10,5"
+                                            Style="{StaticResource ChipBorder}">
+                                            <Label
+                                                FontSize="13"
+                                                Text="{Binding .}"
+                                                TextColor="{StaticResource Spine}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </FlexLayout>
                         </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Column="1" Spacing="6">
-                            <Label Style="{StaticResource SectionCaption}" Text="READING SPEED" />
-                            <Label
-                                FontAttributes="Bold"
-                                FontFamily="OpenSansSemibold"
-                                FontSize="24"
-                                Text="{Binding Stats.AverageReadingSpeed}"
-                                TextColor="{StaticResource Accent}" />
-                        </VerticalStackLayout>
-                    </Grid>
-                </Border>
-
-                <Border Style="{StaticResource CardBorder}">
-                    <VerticalStackLayout Spacing="12">
-                        <Label Style="{StaticResource SectionCaption}" Text="TOP GENRES" />
-                        <FlexLayout JustifyContent="Start" Wrap="Wrap">
-                            <BindableLayout.ItemsSource>
-                                <Binding Path="Stats.TopGenres" />
-                            </BindableLayout.ItemsSource>
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="x:String">
-                                    <Border Margin="0,0,8,8" Style="{StaticResource ChipBorder}">
-                                        <Label FontSize="13" Text="{Binding .}" TextColor="{StaticResource Spine}" />
-                                    </Border>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </FlexLayout>
-                    </VerticalStackLayout>
-                </Border>
+                    </Border>
+                </VerticalStackLayout>
 
                 <VerticalStackLayout
                     HorizontalOptions="Center"
                     IsVisible="{Binding IsEmpty}"
-                    Padding="40,24"
-                    Spacing="8">
+                    Padding="20,32"
+                    Spacing="12">
+                    <Border
+                        BackgroundColor="{StaticResource SurfaceAlt}"
+                        HeightRequest="64"
+                        HorizontalOptions="Center"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="0"
+                        WidthRequest="64">
+                        <Label
+                            FontFamily="OpenSansSemibold"
+                            FontSize="26"
+                            HorizontalOptions="Center"
+                            Text="P"
+                            TextColor="{StaticResource Primary}"
+                            VerticalOptions="Center" />
+                    </Border>
                     <Label
                         FontFamily="OpenSansSemibold"
-                        FontSize="20"
+                        FontSize="19"
                         HorizontalTextAlignment="Center"
+                        Margin="0,2,0,0"
                         Text="No reading data yet"
                         TextColor="{StaticResource Ink}" />
                     <Label
-                        FontSize="14"
                         HorizontalTextAlignment="Center"
-                        MaximumWidthRequest="300"
-                        Text="Import some books and start reading to see your statistics here."
-                        TextColor="{StaticResource Muted}" />
+                        MaximumWidthRequest="290"
+                        Style="{StaticResource PageSubtitle}"
+                        Text="Import some books and start reading to see your statistics here." />
                 </VerticalStackLayout>
 
                 <ActivityIndicator

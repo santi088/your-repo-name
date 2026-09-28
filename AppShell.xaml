@@ -8,7 +8,7 @@
     Shell.BackgroundColor="{StaticResource Surface}"
     Shell.TitleColor="{StaticResource Ink}"
     Shell.ForegroundColor="{StaticResource Primary}"
-    Shell.TabBarBackgroundColor="{StaticResource Card}"
+    Shell.TabBarBackgroundColor="{StaticResource Surface}"
     Shell.TabBarTitleColor="{StaticResource Primary}"
     Shell.TabBarUnselectedColor="{StaticResource Muted}"
     Shell.NavBarHasShadow="False"
