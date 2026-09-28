@@ -94,7 +94,9 @@ public partial class LibraryViewModel : ObservableObject
 
     private void Apply()
     {
-        var list = _all.OrderByDescending(b => b.LastReadAt ?? DateTime.MinValue)
+        // Newest import first: DateAdded is written once at import time and
+        // persisted, so the order survives reloads and app restarts.
+        var list = _all.OrderByDescending(b => b.DateAdded)
             .ThenBy(b => b.Title)
             .ToList();
 

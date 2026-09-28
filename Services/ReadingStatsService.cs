@@ -43,26 +43,44 @@ public class ReadingStatsService
         stats.CurrentStreak = CalculateCurrentStreak(readingDays);
         stats.LongestStreak = CalculateLongestStreak(readingDays);
 
-        // Calculate average reading speed (books per month)
-        if (stats.TotalBooks > 0)
-        {
-            var monthsActive = Math.Max(1, (now - books.Min(b => b.DateAdded)).Days / 30.0);
-            stats.AverageReadingSpeed = $"{(stats.Completed / monthsActive):F1} books/month";
-        }
-
-        // Calculate total reading time estimate (assuming 200 pages/hour)
-        var totalPages = books.Sum(b => (int)(b.ProgressPercent / 100 * 300)); // Estimate 300 pages average
-        var hours = totalPages / 200.0;
-        stats.TotalReadingTime = hours >= 1 ? $"{hours:F1} hours" : $"{(hours * 60):F0} minutes";
-
-        // Get top genres
-        stats.TopGenres = books
-            .Where(b => !string.IsNullOrWhiteSpace(b.Genre) && b.Genre != "Uncategorized")
-            .GroupBy(b => b.Genre)
-            .OrderByDescending(g => g.Count())
+        // Books the reader is part-way through, most recently touched first.
+        stats.InProgress = books
+            .Where(b => b.ReadingStatus == ReadingStatus.CurrentlyReading ||
+                        (b.ProgressPercent > 0 &&
+                         b.ProgressPercent < 100 &&
+                         b.ReadingStatus != ReadingStatus.Dropped))
+            .OrderByDescending(b => b.LastReadAt ?? DateTime.MinValue)
             .Take(5)
-            .Select(g => g.Key)
+            .Select(b => new BookProgressEntry
+            {
+                Title = b.Title,
+                ProgressPercent = b.ProgressPercent
+            })
             .ToList();
+
+        // Finished books, most recently finished first.
+        stats.RecentlyFinished = books
+            .Where(b => b.ReadingStatus == ReadingStatus.Completed)
+            .OrderByDescending(b => b.LastReadAt ?? b.DateAdded)
+            .Take(3)
+            .Select(b => new FinishedBook
+            {
+                Title = b.Title,
+                FinishedAt = b.LastReadAt ?? b.DateAdded
+            })
+            .ToList();
+
+        // The last 30 days, oldest first, flagged from the recorded reading days.
+        var activeDays = new HashSet<DateTime>(readingDays);
+        for (var offset = 29; offset >= 0; offset--)
+        {
+            var day = DateTime.Today.AddDays(-offset);
+            stats.ActivityDays.Add(new ActivityDay
+            {
+                Date = day,
+                IsActive = activeDays.Contains(day)
+            });
+        }
 
         return stats;
     }

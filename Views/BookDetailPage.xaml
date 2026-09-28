@@ -17,15 +17,23 @@
             StrokeShape="RoundRectangle 0,0,20,20"
             StrokeThickness="1">
             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="4" Padding="12,10,16,12">
-                <Button
+                <ImageButton
+                    Aspect="AspectFit"
+                    BackgroundColor="{StaticResource SurfaceAlt}"
+                    BorderColor="{StaticResource Divider}"
+                    BorderWidth="1"
                     Clicked="OnBackClicked"
-                    Style="{StaticResource ButtonIcon}"
-                    Text="←" />
+                    CornerRadius="21"
+                    HeightRequest="42"
+                    Padding="0"
+                    SemanticProperties.Description="Back"
+                    Source="ic_back.svg"
+                    WidthRequest="42" />
                 <Label
                     Grid.Column="1"
                     FontFamily="OpenSansSemibold"
                     FontSize="17"
-                    Padding="10,0,0,0"
+                    Padding="12,0,0,0"
                     Text="Book Details"
                     TextColor="{StaticResource Ink}"
                     VerticalOptions="Center" />
@@ -108,20 +116,7 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <VerticalStackLayout Spacing="8">
-                    <Label Margin="2,0,0,0" Style="{StaticResource SectionCaption}" Text="READING STATUS" />
-                    <Border Style="{StaticResource FieldBorder}">
-                        <Picker
-                            FontFamily="OpenSansRegular"
-                            HeightRequest="50"
-                            ItemsSource="{Binding StatusOptions}"
-                            SelectedItem="{Binding SelectedStatus}"
-                            TextColor="{StaticResource Ink}"
-                            TitleColor="{StaticResource Muted}" />
-                    </Border>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Margin="0,10,0,0" Spacing="10">
+                <VerticalStackLayout Margin="0,6,0,0" Spacing="10">
                     <Button
                         Command="{Binding ReadCommand}"
                         HeightRequest="52"

@@ -11,7 +11,13 @@
 
     <Grid RowDefinitions="Auto,*,Auto">
 
-        <!-- Header sheet: where you are, how far you are, and the way back. -->
+        <!--
+            Reader toolbar: a fixed row that is never shown, hidden or resized by
+            scrolling or page boundaries - only its label text updates, and only
+            when the visible page actually changes. The single-line title and
+            progress label lock the height, so the reading surface below can never
+            be pushed around while pages scroll past.
+        -->
         <Border
             BackgroundColor="{StaticResource Surface}"
             Stroke="{StaticResource Divider}"
@@ -22,22 +28,31 @@
                 ColumnSpacing="4"
                 Padding="12,10,16,14"
                 RowDefinitions="Auto,Auto">
-                <Button
+                <ImageButton
                     Clicked="OnBackClicked"
-                    Style="{StaticResource ButtonIcon}"
-                    Text="←" />
+                    Padding="0"
+                    CornerRadius="21"
+                    BackgroundColor="{StaticResource SurfaceAlt}"
+                    BorderColor="{StaticResource Divider}"
+                    BorderWidth="1"
+                    HeightRequest="42"
+                    WidthRequest="42"
+                    Source="ic_back.svg"
+                    Aspect="AspectFit"
+                    SemanticProperties.Description="Back" />
                 <VerticalStackLayout
                     Grid.Column="1"
-                    Padding="10,0,0,0"
+                    Padding="12,0,0,0"
                     Spacing="2"
                     VerticalOptions="Center">
                     <Label
                         FontFamily="OpenSansSemibold"
                         FontSize="16"
                         LineBreakMode="TailTruncation"
+                        MaxLines="1"
                         Text="{Binding Header}"
                         TextColor="{StaticResource Ink}" />
-                    <Label Style="{StaticResource CardMeta}" Text="{Binding ProgressLabel}" />
+                    <Label MaxLines="1" Style="{StaticResource CardMeta}" Text="{Binding ProgressLabel}" />
                 </VerticalStackLayout>
                 <Border
                     Grid.Row="1"

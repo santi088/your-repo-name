@@ -121,7 +121,6 @@
                                             LineBreakMode="TailTruncation"
                                             Text="{Binding BookTitle}"
                                             TextColor="{StaticResource Ink}" />
-                                        <Label Style="{StaticResource CardMeta}" Text="{Binding BookAuthor}" />
                                     </VerticalStackLayout>
                                     <Border
                                         Grid.Column="1"

@@ -7,6 +7,15 @@ public class DatabaseService
 {
     private SQLiteAsyncConnection? _connection;
 
+    /// <summary>
+    /// Raised whenever something that History shows has changed: a reading event
+    /// was recorded or a book (and its events) was removed. Views that cache
+    /// history use this to reload only when there is actually something new.
+    /// </summary>
+    public event EventHandler? HistoryChanged;
+
+    private void RaiseHistoryChanged() => HistoryChanged?.Invoke(this, EventArgs.Empty);
+
     private async Task<SQLiteAsyncConnection> GetConnectionAsync()
     {
         if (_connection is not null)
@@ -61,6 +70,7 @@ public class DatabaseService
         var db = await GetConnectionAsync();
         await db.Table<ReadingEvent>().Where(e => e.BookId == book.Id).DeleteAsync();
         await db.DeleteAsync(book);
+        RaiseHistoryChanged();
     }
 
     public async Task<List<ReadingEvent>> GetHistoryAsync()
@@ -83,6 +93,7 @@ public class DatabaseService
             ProgressPercent = book.ProgressPercent,
             ReadAt = DateTime.Now
         });
+        RaiseHistoryChanged();
     }
 
     public async Task<List<string>> GetGenresAsync()

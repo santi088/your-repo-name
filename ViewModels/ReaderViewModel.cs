@@ -326,6 +326,13 @@ public partial class ReaderViewModel : ObservableObject, IDisposable
         if (Book is null || !IsPdfMode || PdfPagePaths.Count == 0) return;
 
         var clamped = Math.Clamp(pageIndex, 0, PdfPagePaths.Count - 1);
+        if (clamped == CurrentPdfPage && ProgressLabel.Length > 0)
+        {
+            // Nothing about the visible page has changed: skip the recalculation so
+            // repeated or redundant scroll reports never touch the toolbar.
+            return;
+        }
+
         Book.CurrentChapterIndex = clamped;
         CurrentPdfPage = clamped;
         RecalculateProgress();

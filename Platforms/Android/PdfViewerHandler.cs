@@ -32,6 +32,15 @@ public class PdfViewerHandler : ViewHandler<PdfViewer, RecyclerView>
     private LinearLayoutManager? _layoutManager;
     private PdfScrollListener? _scrollListener;
 
+    /// <summary>
+    /// Last page index reported to the shared layer, or -1 when nothing has been
+    /// reported yet. Scroll events only cross into MAUI when this changes: the
+    /// reader toolbar must not be repainted on every frame of a scroll (and never
+    /// because of the gap between two pages), so only a real page transition is
+    /// worth an event.
+    /// </summary>
+    private int _lastReportedIndex = -1;
+
     public PdfViewerHandler() : base(Mapper, CommandMap)
     {
     }
@@ -100,6 +109,10 @@ public class PdfViewerHandler : ViewHandler<PdfViewer, RecyclerView>
 
     public static void MapPagePaths(PdfViewerHandler handler, PdfViewer virtualView)
     {
+        // A new page list starts a new document: the next scroll must report its
+        // page even if it happens to be the same index as the previous one.
+        handler._lastReportedIndex = -1;
+
         if (handler._adapter is null)
         {
             return;
@@ -137,6 +150,9 @@ public class PdfViewerHandler : ViewHandler<PdfViewer, RecyclerView>
     {
         if (arg is int pageIndex && handler._layoutManager is not null)
         {
+            // The jump is programmatic, so the position it lands on must be
+            // reported even when it matches the last user-visible page.
+            handler._lastReportedIndex = -1;
             handler._layoutManager.ScrollToPositionWithOffset(pageIndex, 0);
         }
     }
@@ -149,12 +165,18 @@ public class PdfViewerHandler : ViewHandler<PdfViewer, RecyclerView>
         }
 
         int firstVisible = _layoutManager.FindFirstVisibleItemPosition();
-        if (firstVisible >= 0 && firstVisible < _adapter.ItemCount)
+        if (firstVisible < 0 || firstVisible >= _adapter.ItemCount || firstVisible == _lastReportedIndex)
         {
-            int total = _adapter.ItemCount;
-            double percent = ((firstVisible + 1.0) / total) * 100.0;
-            VirtualView.NotifyPageScrolled(firstVisible, total, percent);
+            // Scrolling inside one page (or through the gap after it) changes
+            // nothing the reader needs: reporting every frame would repaint the
+            // toolbar during a scroll and make it pop at page boundaries.
+            return;
         }
+
+        _lastReportedIndex = firstVisible;
+        int total = _adapter.ItemCount;
+        double percent = ((firstVisible + 1.0) / total) * 100.0;
+        VirtualView.NotifyPageScrolled(firstVisible, total, percent);
     }
 }
 

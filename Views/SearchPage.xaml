@@ -130,8 +130,7 @@
                                         MaxLines="2"
                                         Style="{StaticResource CardTitle}"
                                         Text="{Binding Title}" />
-                                    <Label Style="{StaticResource CardMeta}" Text="{Binding Author}" />
-                                    <HorizontalStackLayout Margin="0,2,0,0" Spacing="8">
+                                    <HorizontalStackLayout Margin="0,4,0,0" Spacing="8">
                                         <Border Style="{StaticResource ChipBorder}">
                                             <Label
                                                 FontFamily="OpenSansSemibold"

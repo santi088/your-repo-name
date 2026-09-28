@@ -17,25 +17,25 @@
     Title="PAGELY">
 
     <TabBar x:Name="MainTabBar">
-        <Tab Title="Library">
+        <Tab Title="Library" Icon="tab_library.svg">
             <ShellContent
                 ContentTemplate="{DataTemplate views:LibraryPage}"
                 Route="library"
                 Shell.NavBarIsVisible="False" />
         </Tab>
-        <Tab Title="Search">
+        <Tab Title="Search" Icon="tab_search.svg">
             <ShellContent
                 ContentTemplate="{DataTemplate views:SearchPage}"
                 Route="search"
                 Shell.NavBarIsVisible="False" />
         </Tab>
-        <Tab Title="History">
+        <Tab Title="History" Icon="tab_history.svg">
             <ShellContent
                 ContentTemplate="{DataTemplate views:HistoryPage}"
                 Route="history"
                 Shell.NavBarIsVisible="False" />
         </Tab>
-        <Tab Title="Stats">
+        <Tab Title="Stats" Icon="tab_stats.svg">
             <ShellContent
                 ContentTemplate="{DataTemplate views:StatsPage}"
                 Route="stats"
